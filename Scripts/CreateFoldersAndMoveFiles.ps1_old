@@ -1,0 +1,36 @@
+$sourceDirectory = "E:\LRSDATA\DownloadBatchToProcessCloud\Files"
+
+# Get all files in the source directory and its subdirectories
+$files = Get-ChildItem -Path $sourceDirectory -File -Recurse
+
+# Loop through each file and create folders based on their created dates
+foreach ($file in $files) {
+    $createdDate = $file.CreationTime.ToString("yyyy-MM-dd")
+    $destinationFolder = Join-Path -Path $file.Directory.FullName -ChildPath $createdDate
+    
+    # Create the destination folder if it doesn't exist
+    if (!(Test-Path -Path $destinationFolder -PathType Container)) {
+        New-Item -Path $destinationFolder -ItemType Directory | Out-Null
+    }
+    
+    # Move the file to the destination folder
+    Move-Item -Path $file.FullName -Destination $destinationFolder
+}
+
+
+# Get all files in the source directory
+$files = Get-ChildItem -Path $sourceDirectory -File
+
+# Loop through each file and create folders based on their created dates
+foreach ($file in $files) {
+    $createdDate = $file.CreationTime.ToString("yyyy-MM-dd")
+    $destinationFolder = Join-Path -Path $sourceDirectory -ChildPath $createdDate
+    
+    # Create the destination folder if it doesn't exist
+    if (!(Test-Path -Path $destinationFolder -PathType Container)) {
+        New-Item -Path $destinationFolder -ItemType Directory | Out-Null
+    }
+    
+    # Move the file to the destination folder
+    Move-Item -Path $file.FullName -Destination $destinationFolder
+}
